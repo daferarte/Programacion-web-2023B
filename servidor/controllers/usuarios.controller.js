@@ -46,12 +46,53 @@ const AgregarUsuario = async(req=request, res=response)=>{
     })
 }
 
-const usuariosPut = (req=request, res=response)=>{
-    res.send('Hola UCC')
+const ActualizarUsuarios = async(req=request, res=response)=>{
+    
+    const {id} = req.params;
+
+    const { email,  password} = req.body;
+
+    const result = await prisma.user.update({
+        where: {
+            id: Number(id)
+        },
+        data: {
+            email,
+            password
+        }
+    }).catch((e)=>{
+        return e.message;
+    }).finally((async ()=>{
+        await prisma.$disconnect();
+    }));
+    
+    res.json({
+        msg: 'actualizado',
+        result
+    })
+}
+
+const EliminarUsuario =async(req=request, res=response)=>{
+    const {id} = req.params;
+    const result = await prisma.user.delete({
+        where: {
+            id: Number(id)
+        }
+    }).catch((e)=>{
+        return e.message;
+    }).finally((async ()=>{
+        await prisma.$disconnect();
+    }));
+
+    res.json({
+        msg: 'Eliminado',
+        result
+    })
 }
 
 module.exports = {
     MostrarUsuarios,
     AgregarUsuario,
-    usuariosPut
+    ActualizarUsuarios,
+    EliminarUsuario
 }

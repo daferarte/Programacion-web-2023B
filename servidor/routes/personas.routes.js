@@ -13,11 +13,11 @@ const router= Router();
 /**
  * Importando metodos
  */
-const { MostrarUsuarios, AgregarUsuario, usuariosPut } = require('../controllers/usuarios.controller');
+const { MostrarUsuarios, AgregarUsuario, ActualizarUsuarios } = require('../controllers/usuarios.controller');
 
 router.get('/', MostrarUsuarios);
 router.post('/',AgregarUsuario);
-router.put('/',usuariosPut);
+router.put('/',ActualizarUsuarios);
 
 
 module.exports = router;
