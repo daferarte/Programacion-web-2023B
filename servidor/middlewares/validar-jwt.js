@@ -1,5 +1,6 @@
 const { response } = require('express');
 const jwt = require('jsonwebtoken');
+const CryptoJS = require('crypto-js');
 
 const crearJWT = (data) =>{
     const {id, email, password} =data;
@@ -37,7 +38,20 @@ const validarJWT=(req, res=response, next)=>{
     next()
 }
 
+const encriptar = async(data)=>{
+    const encript = await CryptoJS.AES.encript(data, process.env.AUTH_AES_SECRET).toString();
+    return encript
+}
+
+const desencriptar = async (data)=>{
+    let bytes = await CryptoJS.AES.decrypt(data, process.env.AUTH_AES_SECRET);
+    let decryptData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    return decryptData;
+}
+
 module.exports = {
     validarJWT,
-    crearJWT
+    crearJWT,
+    encriptar,
+    desencriptar
 }

@@ -8,7 +8,7 @@
 
 const { PrismaClient } = require('@prisma/client');
 const {response, request }=require('express');
-const { crearJWT } = require('../middlewares/validar-jwt');
+const { crearJWT, encriptar, desencriptar } = require('../middlewares/validar-jwt');
 
 const prisma=new PrismaClient();
 
@@ -20,8 +20,11 @@ const MostrarUsuarios = async(req=request, res=response)=>{
         await prisma.$disconnect();
     }));
 
+    let prueba=encriptar("123");
+
     res.json({
-        usuarios
+        usuarios,
+        prueba
     })
 
 }
