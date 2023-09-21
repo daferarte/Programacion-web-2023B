@@ -8,7 +8,7 @@
 
 const { PrismaClient } = require('@prisma/client');
 const {response, request }=require('express');
-
+const { crearJWT } = require('../middlewares/validar-jwt');
 
 const prisma=new PrismaClient();
 
@@ -90,9 +90,44 @@ const EliminarUsuario =async(req=request, res=response)=>{
     })
 }
 
+const iniciarSesion = async(req=request, res=response) =>{
+    const {email, password}=req.body;
+
+    const usuario= await prisma.user.findMany({
+        where: {
+            AND: [
+                {
+                    email: email,
+                },
+                {
+                    password: password,
+                }
+            ]
+        },
+    })
+    .catch((e)=>{
+        return e.message;
+    }).finally((async ()=>{
+        await prisma.$disconnect();
+    }));
+
+    if(usuario[0]){
+        const usuarioJWT = await crearJWT(usuario);
+
+        res.json({
+            usuario,
+            usuarioJWT
+        })
+        
+    }
+
+    
+}
+
 module.exports = {
     MostrarUsuarios,
     AgregarUsuario,
     ActualizarUsuarios,
-    EliminarUsuario
+    EliminarUsuario,
+    iniciarSesion
 }

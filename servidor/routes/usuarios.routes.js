@@ -13,11 +13,14 @@ const router= Router();
 /**
  * Importando metodos
  */
-const { MostrarUsuarios, AgregarUsuario, ActualizarUsuarios, EliminarUsuario } = require('../controllers/usuarios.controller');
+const { MostrarUsuarios, AgregarUsuario, ActualizarUsuarios, EliminarUsuario, iniciarSesion } = require('../controllers/usuarios.controller');
+const { validarJWT }=require('../middlewares/validar-jwt');
 
-router.get('/', MostrarUsuarios);
+router.get('/', validarJWT, MostrarUsuarios);
 router.post('/',AgregarUsuario);
 router.put('/:id',ActualizarUsuarios);
 router.delete('/:id', EliminarUsuario);
+
+router.post('/login/', iniciarSesion)
 
 module.exports = router;
